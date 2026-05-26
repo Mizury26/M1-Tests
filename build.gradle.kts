@@ -4,6 +4,8 @@ plugins {
 	id("org.springframework.boot") version "3.5.14"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("io.kotest") version "6.1.11"
+	id("jacoco")
+
 }
 
 group = "com.example"
@@ -42,4 +44,17 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+
+}
+
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+		csv.required.set(false)
+	}
 }
