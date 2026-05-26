@@ -5,7 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("io.kotest") version "6.1.11"
 	id("jacoco")
-	id("info.solidsoft.pitest") version "1.15.0"
+	id("info.solidsoft.pitest") version "1.19.0-rc.2"
 }
 
 group = "com.example"
@@ -35,6 +35,7 @@ dependencies {
 	testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
 	testImplementation("io.mockk:mockk:1.14.9")
 	testImplementation("org.junit.platform:junit-platform-suite")
+	pitest("org.pitest:pitest-junit5-plugin:1.2.3")
 }
 
 kotlin {
@@ -59,14 +60,24 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 	}
 }
-
 pitest {
+	pitestVersion.set("1.20.3")
 	junit5PluginVersion.set("1.2.3")
-	avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+
+	targetClasses.set(listOf("com.example.tptest."))
+	targetTests.set(setOf("com.example.tptest."))
+
 	mutators.set(setOf("STRONGER"))
-	targetClasses.set(listOf("com.example.**"))
-	targetTests.set(setOf("com.example.tests.*"))
-	threads.set(2)
+
 	outputFormats.set(setOf("XML", "HTML"))
-	mutationThreshold.set(80)
+
+	threads.set(4)
+
+	timestampedReports.set(false)
+
+	useClasspathFile.set(true)
+
+	failWhenNoMutations.set(false)
+
+	avoidCallsTo.set(setOf("kotlin.jvm.internal"))
 }
