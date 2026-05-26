@@ -63,7 +63,7 @@ pitest {
 	junit5PluginVersion.set("1.2.3")
 	avoidCallsTo.set(setOf("kotlin.jvm.internal"))
 	mutators.set(setOf("STRONGER"))
-	targetClasses.set(setOf("com.example.tests.*"))
+	targetClasses.set(listOf("com.example.**"))
 	targetTests.set(setOf("com.example.tests.*"))
 	threads.set(2)
 	outputFormats.set(setOf("XML", "HTML"))
