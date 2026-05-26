@@ -5,7 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	id("io.kotest") version "6.1.11"
 	id("jacoco")
-
+	id("info.solidsoft.pitest") version "1.19.0"
 }
 
 group = "com.example"
@@ -57,4 +57,15 @@ tasks.jacocoTestReport {
 		html.required.set(true)
 		csv.required.set(false)
 	}
+}
+
+pitest {
+	junit5PluginVersion.set("1.2.3")
+	avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+	mutators.set(setOf("STRONGER"))
+	targetClasses.set(setOf("com.example.tests.*"))
+	targetTests.set(setOf("com.example.tests.*"))
+	threads.set(2)
+	outputFormats.set(setOf("XML", "HTML"))
+	mutationThreshold.set(80)
 }
