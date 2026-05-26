@@ -34,6 +34,7 @@ dependencies {
 	testImplementation("io.kotest:kotest-property:6.1.11")
 	testImplementation("io.kotest:kotest-runner-junit5:6.1.11")
 	testImplementation("io.mockk:mockk:1.14.9")
+	testImplementation("org.junit.platform:junit-platform-suite")
 }
 
 kotlin {
