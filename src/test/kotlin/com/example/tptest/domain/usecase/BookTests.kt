@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldThrow
 import com.example.tptest.domain.fake.FakeBookRepository
-import com.example.tptest.domain.port.IBookRepository
+import com.example.tptest.domain.port.IBookPort
 import com.example.tptest.domain.usecase.BookUseCase
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldContainAll
@@ -53,7 +53,7 @@ class BookInvariantsTests : FunSpec({
     }
 
     test("The list of book must return all of the books sorted by title") {
-        val repository = mockk<IBookRepository>()
+        val repository = mockk<IBookPort>()
         val useCase = BookUseCase(repository)
 
         val books = listOf(

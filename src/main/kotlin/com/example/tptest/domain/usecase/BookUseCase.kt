@@ -1,20 +1,21 @@
 ﻿package com.example.tptest.domain.usecase
 
 import com.example.tptest.domain.model.Book
-import com.example.tptest.domain.port.IBookRepository
+import com.example.tptest.domain.port.IBookPort
 
 class BookUseCase {
-    private val bookRepository: IBookRepository
+    private val bookPort: IBookPort
 
-    constructor(bookRepository: IBookRepository) {
-        this.bookRepository = bookRepository
+    constructor(bookPort: IBookPort) {
+        print("BBBBBBBBBBBBB")
+        this.bookPort = bookPort
     }
 
     fun addBook(book: Book) {
-        bookRepository.save(book)
+        bookPort.save(book)
     }
 
     fun getAllBooks(): List<Book> {
-        return bookRepository.findAll().sortedBy(Book::title)
+        return bookPort.findAll().sortedBy(Book::title)
     }
 }
