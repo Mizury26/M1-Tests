@@ -75,4 +75,27 @@ class BookControllerTest {
             bookUseCase.addBook(any())
         }
     }
+
+    @Test
+    fun `should return 400 when body is invalid`() {
+
+        mockMvc.post("/books") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{ "title": "" }""" // invalide
+        }
+            .andExpect {
+                status { isBadRequest() }
+            }
+    }
+
+    @Test
+    fun `should return 500 when use case throws exception`() {
+
+        every { bookUseCase.getAllBooks() } throws RuntimeException("DB error")
+
+        mockMvc.get("/books")
+            .andExpect {
+                status { isInternalServerError() }
+            }
+    }
 }

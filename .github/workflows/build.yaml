@@ -21,11 +21,19 @@ jobs:
       - name: Give execute permission to gradlew
         run: chmod +x gradlew
 
-      - name: Build
+      # ✅ 1. Build + tests + compilation
+      - name: Build project
         run: ./gradlew clean build
-      - name : test
-        run: ./gradlew test
 
+      # ✅ 2. Génération couverture
+      - name: Generate JaCoCo report
+        run: ./gradlew jacocoTestReport
+
+      # ✅ 3. Mutation testing (PIT)
+      - name: Run PIT mutation tests
+        run: ./gradlew pitest
+
+      # 📦 Test reports
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -35,6 +43,7 @@ jobs:
             build/reports/tests/
             build/test-results/
 
+      # 📦 Coverage reports
       - name: Upload JaCoCo report
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,10 +51,9 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/
 
-      - name: Run PIT mutation tests
-        run: ./gradlew pitest
-
+      # 📦 PIT reports
       - name: Upload PIT report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pitest-report
