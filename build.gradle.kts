@@ -60,24 +60,15 @@ tasks.jacocoTestReport {
 		csv.required.set(false)
 	}
 }
+
 pitest {
-	pitestVersion.set("1.20.3")
 	junit5PluginVersion.set("1.2.3")
+	pitestVersion.set("1.20.3")
 
-	targetClasses.set(listOf("com.example.tptest."))
-	targetTests.set(setOf("com.example.tptest."))
+	targetClasses.set(listOf("com.example.tptest.*"))
+	targetTests.set(setOf("com.example.tptest.*"))
 
-	mutators.set(setOf("STRONGER"))
-
-	outputFormats.set(setOf("XML", "HTML"))
-
-	threads.set(4)
-
+	outputFormats.set(listOf("HTML", "XML"))
 	timestampedReports.set(false)
-
-	useClasspathFile.set(true)
-
-	failWhenNoMutations.set(false)
-
-	avoidCallsTo.set(setOf("kotlin.jvm.internal"))
+	verbose.set(true)
 }

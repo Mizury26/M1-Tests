@@ -21,8 +21,10 @@ jobs:
       - name: Give execute permission to gradlew
         run: chmod +x gradlew
 
-      - name: Build and test
+      - name: Build
         run: ./gradlew clean build
+      - name : test
+        run: ./gradlew test
 
       - name: Upload test reports
         if: always()
