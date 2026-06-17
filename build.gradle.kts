@@ -117,6 +117,8 @@ tasks.withType<Test> {
 
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
+	dependsOn(tasks.named("testComponent"))
+	dependsOn(tasks.named("testIntegration"))
 
 	reports {
 		xml.required.set(true)
