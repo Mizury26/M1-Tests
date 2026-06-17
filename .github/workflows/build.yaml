@@ -29,6 +29,9 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
+      - name: Run integration tests
+        run: ./gradlew testIntegration
+
       # ✅ 3. Component tests (Cucumber / REST Assured)
       - name: Run component tests
         run: ./gradlew testComponent

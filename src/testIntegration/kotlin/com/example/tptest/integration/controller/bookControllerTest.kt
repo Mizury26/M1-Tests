@@ -1,24 +1,25 @@
-﻿package com.example.integration.controller
+﻿package com.example.tptest.integration.controller
 
 import com.example.tptest.domain.model.Book
 import com.example.tptest.domain.usecase.BookUseCase
-import com.ninjasquad.springmockk.MockkBean
 import com.example.tptest.infrastructure.driving.controller.BookController
-import io.mockk.every
-import io.mockk.just
-import io.mockk.Runs
-import io.mockk.verify
-import org.junit.jupiter.api.Test
+import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.spec.style.FunSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-
+import io.mockk.every
+import io.mockk.just
+import io.mockk.Runs
+import io.mockk.verify
+import io.kotest.extensions.spring.SpringExtension
 
 @WebMvcTest(BookController::class)
-class BookControllerTest {
+class BookControllerTest : FunSpec() {
+
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -26,76 +27,73 @@ class BookControllerTest {
     @MockkBean
     lateinit var bookUseCase: BookUseCase
 
-    @Test
-    fun `GET books should return books`() {
+    init {
+        extensions(SpringExtension)
 
-        every {
-            bookUseCase.getAllBooks()
-        } returns listOf(
-            Book("", "Clean Code", "Robert Martin"),
-            Book("", "DDD", "Eric Evans")
-        )
+        test("GET books should return books") {
 
-        mockMvc.get("/books")
-            .andExpect {
-                status { isOk() }
-                jsonPath("$[0].title") { value("Clean Code") }
-                jsonPath("$[0].author") { value("Robert Martin") }
-                jsonPath("$[1].title") { value("DDD") }
-                jsonPath("$[1].author") { value("Eric Evans") }
-            }
+            every {
+                bookUseCase.getAllBooks()
+            } returns listOf(
+                Book("", "Clean Code", "Robert Martin"),
+                Book("", "DDD", "Eric Evans")
+            )
 
-        verify(exactly = 1) {
-            bookUseCase.getAllBooks()
-        }
-    }
-
-    @Test
-    fun `POST books should call use case`() {
-
-        every {
-            bookUseCase.addBook(any())
-        } just Runs
-
-        mockMvc.post("/books") {
-            contentType = MediaType.APPLICATION_JSON
-            content =
-                """
-                {
-                    "title":"Clean Code",
-                    "author":"Robert Martin"
+            mockMvc.get("/books")
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$[0].title") { value("Clean Code") }
+                    jsonPath("$[0].author") { value("Robert Martin") }
                 }
-                """.trimIndent()
+
+            verify(exactly = 1) {
+                bookUseCase.getAllBooks()
+            }
         }
-            .andExpect {
+
+        test("POST books should call use case") {
+
+            every {
+                bookUseCase.addBook(any())
+            } just Runs
+
+            mockMvc.post("/books") {
+                contentType = MediaType.APPLICATION_JSON
+                content = """
+                    {
+                        "title":"Clean Code",
+                        "author":"Robert Martin"
+                    }
+                """.trimIndent()
+            }.andExpect {
                 status { isCreated() }
             }
 
-        verify(exactly = 1) {
-            bookUseCase.addBook(any())
+            verify(exactly = 1) {
+                bookUseCase.addBook(any())
+            }
         }
-    }
 
-    @Test
-    fun `should return 400 when body is invalid`() {
+        test("should return 400 when body is invalid") {
 
-        mockMvc.post("/books") {
-            contentType = MediaType.APPLICATION_JSON
-            content = """{ "title": "" }""" // invalide
-        }
-            .andExpect {
+            mockMvc.post("/books") {
+                contentType = MediaType.APPLICATION_JSON
+                content = """{ "title": "" }"""
+            }.andExpect {
                 status { isBadRequest() }
             }
-    }
+        }
 
-    @Test
-    fun `should return 500 when use case throws exception`() {
+        test("should return 500 when use case throws exception") {
 
-        every { bookUseCase.getAllBooks() } throws RuntimeException("DB error")
+            every {
+                bookUseCase.getAllBooks()
+            } throws RuntimeException("DB error")
 
-        mockMvc.get("/books")
-            .andExpect {
-                status { isInternalServerError() }
-            }
+            mockMvc.get("/books")
+                .andExpect {
+                    status { isInternalServerError() }
+                }
+        }
     }
 }

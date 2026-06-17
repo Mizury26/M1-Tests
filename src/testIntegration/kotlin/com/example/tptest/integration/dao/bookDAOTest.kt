@@ -1,6 +1,8 @@
 ﻿package com.example.tptest.infrastructure.driven.postgres
 
 import com.example.tptest.domain.model.Book
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +16,12 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 
 @SpringBootTest
-class BookDAOIT {
+class BookDAOIT : FunSpec() {
+    @Autowired
+    lateinit var bookDAO: BookDAO
+
+    @Autowired
+    lateinit var jdbcTemplate: NamedParameterJdbcTemplate
 
     companion object {
         val postgres = PostgreSQLContainer("postgres:16-alpine")
@@ -32,41 +39,42 @@ class BookDAOIT {
         }
     }
 
-    @Autowired
-    lateinit var bookDAO: BookDAO
+    init {
 
-    @Autowired
-    lateinit var jdbcTemplate: NamedParameterJdbcTemplate
+        extensions(SpringExtension)
 
-    @BeforeEach
+
+        beforeEach {
+            clean()
+        }
+
+        test("should insert and read books from database"){
+            jdbcTemplate.update(
+                """
+            INSERT INTO book(id, title, author)
+            VALUES ('11111111-1111-1111-1111-111111111111', 'Old Book', 'Author A')
+            """.trimIndent(),
+                MapSqlParameterSource()
+            )
+
+            // 2. ACTION
+            bookDAO.save(
+                Book(
+                    id = null,
+                    title = "New Book",
+                    author = "Author B"
+                )
+            )
+
+            // 3. VERIFICATION
+            val result = bookDAO.findAll()
+
+            result.size shouldBe 2
+        }
+    }
+
     fun clean() {
         jdbcTemplate.update("DELETE FROM book", emptyMap<String, Any>())
     }
 
-    @Test
-    fun `should insert and read books from database`() {
-
-        // 1. PREPARATION
-        jdbcTemplate.update(
-            """
-            INSERT INTO book(id, title, author)
-            VALUES ('11111111-1111-1111-1111-111111111111', 'Old Book', 'Author A')
-            """.trimIndent(),
-            MapSqlParameterSource()
-        )
-
-        // 2. ACTION
-        bookDAO.save(
-            Book(
-                id = null,
-                title = "New Book",
-                author = "Author B"
-            )
-        )
-
-        // 3. VERIFICATION
-        val result = bookDAO.findAll()
-
-        result.size shouldBe 2
-    }
 }

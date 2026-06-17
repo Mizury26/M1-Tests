@@ -82,8 +82,8 @@ dependencies {
 	testIntegrationImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
 	pitest("org.pitest:pitest-junit5-plugin:1.2.3")
 	testIntegrationImplementation("io.mockk:mockk:1.14.9")
-	testIntegrationImplementation("io.kotest:kotest-assertions-core:6.1.11")
-	testIntegrationImplementation("io.kotest:kotest-runner-junit5:6.1.11")
+	testIntegrationImplementation("io.kotest:kotest-assertions-core:5.9.1")
+	testIntegrationImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 	testIntegrationImplementation("com.ninja-squad:springmockk:4.0.2")
 	testIntegrationImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
 	testIntegrationImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -96,7 +96,7 @@ dependencies {
 	testComponentImplementation("io.rest-assured:rest-assured:5.3.2")
 	testComponentImplementation("org.junit.platform:junit-platform-suite:1.10.0")
 	testComponentImplementation("org.testcontainers:postgresql:1.19.1")
-	testComponentImplementation("io.kotest:kotest-assertions-core:6.1.11")
+	testComponentImplementation("io.kotest:kotest-assertions-core:5.9.1")
 	testComponentImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation(kotlin("test"))
 	testComponentImplementation(kotlin("test"))
@@ -110,6 +110,9 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.test {
 	finalizedBy(tasks.jacocoTestReport)
 }
 tasks.named<Test>("testIntegration") {

@@ -2,6 +2,7 @@
 
 import com.example.tptest.domain.port.IBookPort
 import com.example.tptest.domain.usecase.BookUseCase
+import com.example.tptest.infrastructure.driven.postgres.BookDAO
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 class UseCasesConfiguration {
 
     @Bean
-    fun bookUseCase(bookPort: IBookPort): BookUseCase {
+    fun bookUseCase(bookPort: BookDAO): BookUseCase {
         return BookUseCase(bookPort)
     }
 }
