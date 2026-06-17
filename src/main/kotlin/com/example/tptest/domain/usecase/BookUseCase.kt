@@ -7,7 +7,6 @@ class BookUseCase {
     private val bookPort: IBookPort
 
     constructor(bookPort: IBookPort) {
-        print("BBBBBBBBBBBBB")
         this.bookPort = bookPort
     }
 

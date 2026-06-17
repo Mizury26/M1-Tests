@@ -21,9 +21,21 @@ jobs:
       - name: Give execute permission to gradlew
         run: chmod +x gradlew
 
-      # ✅ 1. Build + tests + compilation
+      # ✅ 1. Build
       - name: Build project
         run: ./gradlew clean build
+
+      # ✅ 2. Unit tests
+      - name: Run unit tests
+        run: ./gradlew test
+
+      # ✅ 3. Integration tests (si tu en as)
+      - name: Run integration tests
+        run: ./gradlew testIntegration
+
+      # ✅ 4. Component tests (Cucumber / REST Assured)
+      - name: Run component tests
+        run: ./gradlew testComponent
 
       # ✅ 2. Génération couverture
       - name: Generate JaCoCo report

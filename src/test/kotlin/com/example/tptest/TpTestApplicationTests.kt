@@ -11,11 +11,6 @@ import io.kotest.property.arbitrary.element
 import io.kotest.property.forAll
 
 @SpringBootTest
-class TpTestApplicationTests {
-	@Test
-	fun contextLoads() {}
-}
-
 class CypherUnitTests : FunSpec({
 	test("Cypher algo char 'A' and 2 should equal 'C'") {
 		val a = 'A'

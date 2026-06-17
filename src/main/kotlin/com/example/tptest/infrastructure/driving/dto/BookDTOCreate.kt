@@ -1,9 +1,8 @@
 ﻿package com.example.tptest.infrastructure.driving.dto;
 import jakarta.validation.constraints.NotBlank
 
-data class BookDTO (
-    @field:NotBlank
-    val id: String,
+
+data class BookDTOCreate (
     @field:NotBlank
     val title: String,
     @field:NotBlank

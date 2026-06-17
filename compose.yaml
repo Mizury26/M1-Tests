@@ -1,1 +1,31 @@
-services: {}
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_test
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: book_db
+    ports:
+      - "5432:5432"
+    networks:
+      - test-default
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@test.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    networks:
+      - test-default
+
+networks:
+
+  test-default:
+    driver: bridge

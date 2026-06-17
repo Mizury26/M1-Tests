@@ -1,4 +1,4 @@
-﻿package com.example.tptest
+﻿package com.example.integration.controller
 
 import com.example.tptest.domain.model.Book
 import com.example.tptest.domain.usecase.BookUseCase
@@ -32,8 +32,8 @@ class BookControllerTest {
         every {
             bookUseCase.getAllBooks()
         } returns listOf(
-            Book("Clean Code", "Robert Martin"),
-            Book("DDD", "Eric Evans")
+            Book("", "Clean Code", "Robert Martin"),
+            Book("", "DDD", "Eric Evans")
         )
 
         mockMvc.get("/books")

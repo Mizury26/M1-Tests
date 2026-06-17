@@ -10,7 +10,6 @@ class UseCasesConfiguration {
 
     @Bean
     fun bookUseCase(bookPort: IBookPort): BookUseCase {
-        print("AAAAAAAAAAAa")
         return BookUseCase(bookPort)
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.http.HttpStatus
 import com.example.tptest.domain.usecase.BookUseCase
 import com.example.tptest.domain.model.Book
+import com.example.tptest.infrastructure.driving.dto.BookDTOCreate
 import jakarta.validation.Valid
 
 @RestController
@@ -28,15 +29,19 @@ class BookController(
     // POST localhost:8080/books with body {"title":"title_test","author":"author_test"} returns 201 Created with no content
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addBook(@Valid @RequestBody book: BookDTO) {
+    fun addBook(@Valid @RequestBody book: BookDTOCreate) {
         bookUseCase.addBook(mappingBookDTOToBook(book))
     }
 }
 
-fun mappingBookDTOToBook(bookDTO: BookDTO): Book {
-    return Book(bookDTO.title, bookDTO.author)
+fun mappingBookToBookDTO(book: Book): BookDTO {
+    return BookDTO(requireNotNull(book.id), book.title, book.author )
 }
 
-fun mappingBookToBookDTO(book: Book): BookDTO {
-    return BookDTO(book.title, book.author)
+fun mappingBookDTOToBook(bookDTO: BookDTOCreate): Book {
+    return Book(
+        id = null,
+        title = bookDTO.title,
+        author = bookDTO.author
+    )
 }
