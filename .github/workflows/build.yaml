@@ -29,19 +29,15 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
-      # ✅ 3. Integration tests (si tu en as)
-      - name: Run integration tests
-        run: ./gradlew testIntegration
-
-      # ✅ 4. Component tests (Cucumber / REST Assured)
+      # ✅ 3. Component tests (Cucumber / REST Assured)
       - name: Run component tests
         run: ./gradlew testComponent
 
-      # ✅ 2. Génération couverture
+      # ✅ 4. Génération couverture
       - name: Generate JaCoCo report
         run: ./gradlew jacocoTestReport
 
-      # ✅ 3. Mutation testing (PIT)
+      # ✅ 5. Mutation testing (PIT)
       - name: Run PIT mutation tests
         run: ./gradlew pitest
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 
 import org.testcontainers.containers.PostgreSQLContainer
 
@@ -20,6 +22,14 @@ class BookDAOIT {
             .withUsername("test")
             .withPassword("test")
             .apply { start() }   // 👈 IMPORTANT (sans @Container)
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun overrideDatasourceProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url") { postgres.jdbcUrl }
+            registry.add("spring.datasource.username") { postgres.username }
+            registry.add("spring.datasource.password") { postgres.password }
+        }
     }
 
     @Autowired
@@ -46,7 +56,7 @@ class BookDAOIT {
         )
 
         // 2. ACTION
-        bookDAO.createBook(
+        bookDAO.save(
             Book(
                 id = null,
                 title = "New Book",
@@ -55,7 +65,7 @@ class BookDAOIT {
         )
 
         // 3. VERIFICATION
-        val result = bookDAO.getBook()
+        val result = bookDAO.findAll()
 
         result.size shouldBe 2
     }
