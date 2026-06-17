@@ -111,14 +111,22 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
-
+}
+tasks.named<Test>("testIntegration") {
+	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
 }
 
+tasks.named<Test>("testComponent") {
+	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
 
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
-	dependsOn(tasks.named("testComponent"))
-	dependsOn(tasks.named("testIntegration"))
+	dependsOn(tasks.named<Test>("testIntegration"))
+	dependsOn(tasks.named<Test>("testComponent"))
+
 
 	reports {
 		xml.required.set(true)
