@@ -12,6 +12,9 @@ import com.example.tptest.domain.usecase.BookUseCase
 import com.example.tptest.domain.model.Book
 import com.example.tptest.infrastructure.driving.dto.BookDTOCreate
 import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.annotation.ExceptionHandler
 
 @RestController
 @RequestMapping("/books")
@@ -31,6 +34,16 @@ class BookController(
     @ResponseStatus(HttpStatus.CREATED)
     fun addBook(@Valid @RequestBody book: BookDTOCreate) {
         bookUseCase.addBook(mappingBookDTOToBook(book))
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleInvalidJson(e: HttpMessageNotReadableException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Corps de la requête invalide")
+    }
+
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(e: RuntimeException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
     }
 }
 
