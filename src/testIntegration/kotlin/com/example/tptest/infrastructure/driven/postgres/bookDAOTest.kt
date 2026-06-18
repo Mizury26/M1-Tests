@@ -72,6 +72,48 @@ class BookDAOIT : FunSpec() {
 
             result.size shouldBe 2
         }
+
+        test("should reserve a book via update") {
+            val id = "22222222-2222-2222-2222-222222222222"
+
+            jdbcTemplate.update(
+                """
+        INSERT INTO book(id, title, author, is_reserved)
+        VALUES (:id::uuid, 'Reservable Book', 'Author R', false)
+        """.trimIndent(),
+                MapSqlParameterSource().addValue("id", id) // Injection propre ici
+            )
+
+            val book = bookDAO.findByd(id)
+            book.is_reserved shouldBe false
+
+            // Reserve
+            bookDAO.update(book.copy(is_reserved = true))
+
+            val updated = bookDAO.findByd(id)
+            updated.is_reserved shouldBe true
+        }
+
+        test("should dereserve a book via update") {
+            val id = "33333333-3333-3333-3333-333333333333"
+
+            jdbcTemplate.update(
+                """
+        INSERT INTO book(id, title, author, is_reserved)
+        VALUES (:id::uuid, 'Already Reserved', 'Author D', true)
+        """.trimIndent(),
+                MapSqlParameterSource().addValue("id", id)
+            )
+
+            val book = bookDAO.findByd(id)
+            book.is_reserved shouldBe true
+
+            // Dereserve
+            bookDAO.update(book.copy(is_reserved = false))
+
+            val updated = bookDAO.findByd(id)
+            updated.is_reserved shouldBe false
+        }
     }
 
     fun clean() {

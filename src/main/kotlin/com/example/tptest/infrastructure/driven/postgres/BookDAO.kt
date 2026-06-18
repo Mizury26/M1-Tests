@@ -24,7 +24,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
 
     override fun findByd(id: String): Book {
         return namedParameterJdbcTemplate.query(
-            "SELECT * FROM book WHERE id = :id",
+            "SELECT * FROM book WHERE id = :id::uuid",
             MapSqlParameterSource().addValue("id", id)
         ) { rs, _ ->
             Book(
@@ -43,7 +43,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
             SET title = :title,
                 author = :author,
                 is_reserved = :is_reserved
-            WHERE id = :id
+            WHERE id = :id::uuid
             """.trimIndent(),
             mapOf(
                 "id" to requireNotNull(book.id),
