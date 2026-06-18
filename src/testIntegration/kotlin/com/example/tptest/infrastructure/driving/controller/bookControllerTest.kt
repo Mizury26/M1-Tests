@@ -110,6 +110,22 @@ class BookControllerTest : FunSpec() {
             }
         }
 
+        test("should return 200 when reserving a book") {
+            every {
+                bookUseCase.reserveBook("1")
+            } just Runs
+
+            mockMvc.post("/books/reserve") {
+                param("bookId", "1")
+            }.andExpect {
+                status { isOk() }
+            }
+
+            verify(exactly = 1) {
+                bookUseCase.reserveBook("1")
+            }
+        }
+
         test("should return 412 when dereserving a book that is not reserved") {
             every {
                 bookUseCase.dereserveBook("1")
@@ -119,6 +135,22 @@ class BookControllerTest : FunSpec() {
                 param("bookId", "1")
             }.andExpect {
                 status { isPreconditionFailed() }
+            }
+        }
+
+        test("should return 200 when dereserving a book") {
+            every {
+                bookUseCase.dereserveBook("1")
+            } just Runs
+
+            mockMvc.post("/books/dereserve") {
+                param("bookId", "1")
+            }.andExpect {
+                status { isOk() }
+            }
+
+            verify(exactly = 1) {
+                bookUseCase.dereserveBook("1")
             }
         }
     }
