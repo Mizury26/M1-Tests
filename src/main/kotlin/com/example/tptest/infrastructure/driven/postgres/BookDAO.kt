@@ -58,17 +58,24 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
         }
     }
 
-    override fun save(book: Book) {
-        namedParameterJdbcTemplate.update(
+    override fun save(book: Book): Book {
+        return namedParameterJdbcTemplate.query(
             """
         INSERT INTO book(title, author, is_reserved)
         VALUES (:title, :author, :is_reserved)
+        RETURNING id, title, author, is_reserved
         """.trimIndent(),
-            mapOf(
-                "title" to book.title,
-                "author" to book.author,
-                "is_reserved" to book.is_reserved
+            MapSqlParameterSource()
+                .addValue("title", book.title)
+                .addValue("author", book.author)
+                .addValue("is_reserved", book.is_reserved)
+        ) { rs, _ ->
+            Book(
+                id = rs.getString("id"),
+                title = rs.getString("title"),
+                author = rs.getString("author"),
+                is_reserved = rs.getBoolean("is_reserved")
             )
-        )
+        }.first()
     }
 }

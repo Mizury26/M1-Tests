@@ -31,12 +31,14 @@ class BookController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addBook(@Valid @RequestBody book: BookDTOCreate) {
+    fun addBook(@Valid @RequestBody book: BookDTOCreate): BookDTO {
         try {
-            bookUseCase.addBook(mappingBookDTOCreateToBook(book))
+            val created = bookUseCase.addBook(mappingBookDTOCreateToBook(book))
+            return mappingBookToBookDTO(created)
         } catch (e: Exception) {
             handleException(e, "Erreur lors de l'ajout du livre")
         }
+        throw IllegalStateException("Unreachable")
     }
 
     @PostMapping("/reserve")

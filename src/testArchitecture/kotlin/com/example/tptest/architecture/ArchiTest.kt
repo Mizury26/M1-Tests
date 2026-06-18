@@ -17,9 +17,10 @@ class ArchiTest : FunSpec() {
     init {
         test("le domaine ne doit pas dépendre de l'infrastructure") {
             val rule = layeredArchitecture().consideringAllDependencies()
-                .layer("Domain Model").definedBy("$BASE_PACKAGE.domain.model..")
+                .layer("Domain Model").definedBy("$BASE_PACKAGE.domain.model..", "$BASE_PACKAGE.domain.exception..")
                 .layer("Domain Port").definedBy("$BASE_PACKAGE.domain.port..")
                 .layer("Domain UseCase").definedBy("$BASE_PACKAGE.domain.usecase..")
+                .layer("Domain Exception").definedBy("$BASE_PACKAGE.domain.exception..")
                 .layer("Infrastructure").definedBy("$BASE_PACKAGE.infrastructure..")
                 .optionalLayer("Standard API").definedBy(
                     "java..", "kotlin..", "kotlinx..",
@@ -28,7 +29,7 @@ class ArchiTest : FunSpec() {
 //                .withOptionalLayers(true)
                 .whereLayer("Domain Model").mayOnlyAccessLayers("Standard API")
                 .whereLayer("Domain Port").mayOnlyAccessLayers("Standard API", "Domain Model")
-                .whereLayer("Domain UseCase").mayOnlyAccessLayers("Standard API", "Domain Model", "Domain Port")
+                .whereLayer("Domain UseCase").mayOnlyAccessLayers("Standard API", "Domain Model", "Domain Port", "Domain Exception")
 
             rule.check(importedClasses)
         }

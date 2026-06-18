@@ -7,8 +7,9 @@ import com.example.tptest.domain.port.IBookPort
 class FakeBookRepository : IBookPort {
     private val books = mutableListOf<Book>()
 
-    override fun save(book: Book) {
+    override fun save(book: Book): Book {
         books.add(book)
+        return book
     }
 
     override fun findAll(): List<Book> {

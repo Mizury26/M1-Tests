@@ -57,7 +57,7 @@ class BookControllerTest : FunSpec() {
 
             every {
                 bookUseCase.addBook(any())
-            } just Runs
+            } returns Book("11111111-1111-1111-1111-111111111111", "Clean Code", "Robert Martin", is_reserved = false)
 
             mockMvc.post("/books") {
                 contentType = MediaType.APPLICATION_JSON

@@ -1,5 +1,6 @@
 ﻿package com.example.tptest.component
 
+import io.cucumber.java.Before
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import io.cucumber.spring.ScenarioScope
@@ -12,21 +13,24 @@ import kotlin.test.assertEquals
 class BookStepDefs {
 
     @LocalServerPort
-    var port = 0
+    private var port: Int = 0
+
+
+    @Before
+    fun setup() {
+        RestAssured.baseURI = "http://localhost:$port"
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
+    }
 
     lateinit var response: Response
+    var lastCreatedBookId: String? = null
 
     @When("je récupère la liste des livres")
     fun getBooks() {
-
-        RestAssured.baseURI = "http://localhost"
-        RestAssured.port = port
-
-        response =
-            RestAssured
-                .given()
-                .`when`()
-                .get("/books")
+        response = RestAssured
+            .given()
+            .`when`()
+            .get("/books")
     }
 
     @Then("le code retour est {int}")
@@ -34,25 +38,36 @@ class BookStepDefs {
         assertEquals(code, response.statusCode)
     }
 
-
     @When("j'ajoute un livre avec le titre {string} et l'auteur {string}")
     fun addBook(title: String, author: String) {
+        response = RestAssured
+            .given()
+            .contentType("application/json")
+            .body(
+                """
+                {
+                    "title":"$title",
+                    "author":"$author"
+                }
+                """
+            )
+            .post("/books")
 
-        RestAssured.baseURI = "http://localhost"
-        RestAssured.port = port
+        // Extraction de l'ID directement depuis la réponse du POST 201
+        if (response.statusCode == 201) {
+            lastCreatedBookId = response.jsonPath().getString("id")
+        }
+    }
 
-        response =
-            RestAssured
-                .given()
-                .contentType("application/json")
-                .body(
-                    """
-                    {
-                        "title":"$title",
-                        "author":"$author"
-                    }
-                    """
-                )
-                .post("/books")
+    @When("je réserve ce livre via son ID")
+    fun reserveBookWithId() {
+        checkNotNull(lastCreatedBookId) { "Impossible de réserver : aucun ID de livre stocké !" }
+
+        // Appel de ton endpoint réel : POST /books/reserve?bookId=xxx
+        response = RestAssured
+            .given()
+            .queryParam("bookId", lastCreatedBookId)
+            .`when`()
+            .post("/books/reserve")
     }
 }

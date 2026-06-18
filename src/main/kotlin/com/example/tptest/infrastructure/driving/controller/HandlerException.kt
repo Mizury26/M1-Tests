@@ -1,20 +1,27 @@
 ﻿package com.example.tptest.infrastructure.driving.controller
 
+import com.example.tptest.domain.exception.BookAlreadyReservedException
+import com.example.tptest.domain.exception.BookNotFoundException
+import com.example.tptest.domain.exception.BookNotReservedException
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.server.ResponseStatusException
 
 fun handleException(ex: Exception, defaultMessage: String): Nothing {
-    val responseStatus = ex.javaClass.getAnnotation(ResponseStatus::class.java)
-        ?: ex.cause?.javaClass?.getAnnotation(ResponseStatus::class.java)
-
-    if (responseStatus != null) {
-        throw ex
+    val status = when (ex) {
+        is BookNotFoundException -> HttpStatus.NOT_FOUND
+        is BookAlreadyReservedException,
+        is BookNotReservedException -> HttpStatus.PRECONDITION_FAILED
+        else -> when (val cause = ex.cause) {
+            is BookNotFoundException -> HttpStatus.NOT_FOUND
+            is BookAlreadyReservedException,
+            is BookNotReservedException -> HttpStatus.PRECONDITION_FAILED
+            else -> null
+        }
     }
 
     throw ResponseStatusException(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        defaultMessage,
+        status ?: HttpStatus.INTERNAL_SERVER_ERROR,
+        ex.message ?: defaultMessage,
         ex
     )
 }

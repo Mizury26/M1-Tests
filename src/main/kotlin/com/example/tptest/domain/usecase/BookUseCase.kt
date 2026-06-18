@@ -13,8 +13,8 @@ class BookUseCase {
         this.bookPort = bookPort
     }
 
-    fun addBook(book: Book) {
-        bookPort.save(book)
+    fun addBook(book: Book): Book {
+        return bookPort.save(book)
     }
 
     fun getAllBooks(): List<Book> {
