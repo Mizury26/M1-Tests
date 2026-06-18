@@ -1,4 +1,4 @@
-﻿package com.example.tptest.integration.controller
+﻿package com.example.tptest.infrastructure.driving.controller
 
 import com.example.tptest.domain.model.Book
 import com.example.tptest.domain.usecase.BookUseCase

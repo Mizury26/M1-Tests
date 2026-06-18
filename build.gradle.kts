@@ -46,6 +46,16 @@ testing {
 				runtimeClasspath += sourceSets.main.get().output
 			}
 		}
+		val testArchitecture by registering(JvmTestSuite::class) {
+
+			sources {
+				kotlin {
+					setSrcDirs(listOf("src/testArchitecture/kotlin"))
+				}
+				compileClasspath += sourceSets.main.get().output
+				runtimeClasspath += sourceSets.main.get().output
+			}
+		}
 	}
 }
 
@@ -55,6 +65,10 @@ val testIntegrationImplementation: Configuration by configurations.getting {
 }
 
 val testComponentImplementation: Configuration by configurations.getting {
+	extendsFrom(configurations.implementation.get())
+}
+
+val testArchitectureImplementation: Configuration by configurations.getting {
 	extendsFrom(configurations.implementation.get())
 }
 
@@ -100,6 +114,9 @@ dependencies {
 	testComponentImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation(kotlin("test"))
 	testComponentImplementation(kotlin("test"))
+	testArchitectureImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
+	testArchitectureImplementation("io.kotest:kotest-assertions-core:5.9.1")
+	testArchitectureImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 }
 
 kotlin {
@@ -125,10 +142,16 @@ tasks.named<Test>("testComponent") {
 	finalizedBy(tasks.jacocoTestReport)
 }
 
+tasks.named<Test>("testArchitecture") {
+	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
 	dependsOn(tasks.named<Test>("testIntegration"))
 	dependsOn(tasks.named<Test>("testComponent"))
+	dependsOn(tasks.named<Test>("testArchitecture"))
 
 
 	reports {

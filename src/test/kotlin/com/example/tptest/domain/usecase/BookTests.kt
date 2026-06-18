@@ -1,4 +1,4 @@
-﻿package com.example.tptest
+﻿package com.example.tptest.domain.usecase
 
 import com.example.tptest.domain.model.Book
 import org.junit.jupiter.api.Test
