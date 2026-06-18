@@ -37,8 +37,8 @@ class BookControllerTest : FunSpec() {
             every {
                 bookUseCase.getAllBooks()
             } returns listOf(
-                Book("", "Clean Code", "Robert Martin" , is_reserved = true),
-                Book("", "DDD", "Eric Evans", is_reserved = true),
+                Book("", "Clean Code", "Robert Martin" , isReserved = true),
+                Book("", "DDD", "Eric Evans", isReserved = true),
             )
 
             mockMvc.get("/books")
@@ -57,7 +57,7 @@ class BookControllerTest : FunSpec() {
 
             every {
                 bookUseCase.addBook(any())
-            } returns Book("11111111-1111-1111-1111-111111111111", "Clean Code", "Robert Martin", is_reserved = false)
+            } returns Book("11111111-1111-1111-1111-111111111111", "Clean Code", "Robert Martin", isReserved = false)
 
             mockMvc.post("/books") {
                 contentType = MediaType.APPLICATION_JSON

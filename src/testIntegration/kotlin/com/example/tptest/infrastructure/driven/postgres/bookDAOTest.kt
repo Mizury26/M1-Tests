@@ -63,7 +63,7 @@ class BookDAOIT : FunSpec() {
                     id = null,
                     title = "New Book",
                     author = "Author B",
-                    is_reserved = false
+                    isReserved = false
                 )
             )
 
@@ -85,13 +85,13 @@ class BookDAOIT : FunSpec() {
             )
 
             val book = bookDAO.findByd(id)
-            book.is_reserved shouldBe false
+            book.isReserved shouldBe false
 
             // Reserve
-            bookDAO.update(book.copy(is_reserved = true))
+            bookDAO.update(book.copy(isReserved = true))
 
             val updated = bookDAO.findByd(id)
-            updated.is_reserved shouldBe true
+            updated.isReserved shouldBe true
         }
 
         test("should dereserve a book via update") {
@@ -106,13 +106,13 @@ class BookDAOIT : FunSpec() {
             )
 
             val book = bookDAO.findByd(id)
-            book.is_reserved shouldBe true
+            book.isReserved shouldBe true
 
             // Dereserve
-            bookDAO.update(book.copy(is_reserved = false))
+            bookDAO.update(book.copy(isReserved = false))
 
             val updated = bookDAO.findByd(id)
-            updated.is_reserved shouldBe false
+            updated.isReserved shouldBe false
         }
     }
 
