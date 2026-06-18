@@ -28,7 +28,7 @@ class BookDAOIT : FunSpec() {
             .withDatabaseName("testdb")
             .withUsername("test")
             .withPassword("test")
-            .apply { start() }   // 👈 IMPORTANT (sans @Container)
+            .apply { start() }
 
         @JvmStatic
         @DynamicPropertySource
@@ -62,7 +62,8 @@ class BookDAOIT : FunSpec() {
                 Book(
                     id = null,
                     title = "New Book",
-                    author = "Author B"
+                    author = "Author B",
+                    is_reserved = false
                 )
             )
 

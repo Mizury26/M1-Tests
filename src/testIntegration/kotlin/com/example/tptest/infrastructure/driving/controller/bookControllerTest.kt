@@ -1,5 +1,7 @@
 ﻿package com.example.tptest.infrastructure.driving.controller
 
+import com.example.tptest.domain.exception.BookAlreadyReservedException
+import com.example.tptest.domain.exception.BookNotReservedException
 import com.example.tptest.domain.model.Book
 import com.example.tptest.domain.usecase.BookUseCase
 import com.example.tptest.infrastructure.driving.controller.BookController
@@ -35,8 +37,8 @@ class BookControllerTest : FunSpec() {
             every {
                 bookUseCase.getAllBooks()
             } returns listOf(
-                Book("", "Clean Code", "Robert Martin"),
-                Book("", "DDD", "Eric Evans")
+                Book("", "Clean Code", "Robert Martin" , is_reserved = true),
+                Book("", "DDD", "Eric Evans", is_reserved = true),
             )
 
             mockMvc.get("/books")
@@ -88,12 +90,36 @@ class BookControllerTest : FunSpec() {
 
             every {
                 bookUseCase.getAllBooks()
-            } throws RuntimeException("DB error")
+            } throws Exception("DB error")
 
             mockMvc.get("/books")
                 .andExpect {
                     status { isInternalServerError() }
                 }
+        }
+
+        test("should return 412 when reserving an already reserved book") {
+            every {
+                bookUseCase.reserveBook("1")
+            } throws BookAlreadyReservedException("Livre déjà réservé")
+
+            mockMvc.post("/books/reserve") {
+                param("bookId", "1")
+            }.andExpect {
+                status { isPreconditionFailed() }
+            }
+        }
+
+        test("should return 412 when dereserving a book that is not reserved") {
+            every {
+                bookUseCase.dereserveBook("1")
+            } throws BookNotReservedException("Livre n'est pas réservé")
+
+            mockMvc.post("/books/dereserve") {
+                param("bookId", "1")
+            }.andExpect {
+                status { isPreconditionFailed() }
+            }
         }
     }
 }

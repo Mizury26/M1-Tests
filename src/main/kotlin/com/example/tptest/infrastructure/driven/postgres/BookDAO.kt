@@ -1,7 +1,9 @@
 ﻿package com.example.tptest.infrastructure.driven.postgres
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+
+import com.example.tptest.domain.exception.BookNotFoundException
 import com.example.tptest.domain.model.Book
 import com.example.tptest.domain.port.IBookPort
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import kotlin.collections.mapOf
@@ -15,18 +17,57 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                     id = rs.getString("id"),
                     title = rs.getString("title"),
                     author = rs.getString("author"),
+                    is_reserved = rs.getBoolean("is_reserved")
                 )
             }
     }
+
+    override fun findByd(id: String): Book {
+        return namedParameterJdbcTemplate.query(
+            "SELECT * FROM book WHERE id = :id",
+            MapSqlParameterSource().addValue("id", id)
+        ) { rs, _ ->
+            Book(
+                id = rs.getString("id"),
+                title = rs.getString("title"),
+                author = rs.getString("author"),
+                is_reserved = rs.getBoolean("is_reserved")
+            )
+        }.firstOrNull() ?: throw BookNotFoundException("Livre non trouvé pour l'id $id")
+    }
+
+    override fun update(book: Book) {
+        val updatedRows = namedParameterJdbcTemplate.update(
+            """
+            UPDATE book
+            SET title = :title,
+                author = :author,
+                is_reserved = :is_reserved
+            WHERE id = :id
+            """.trimIndent(),
+            mapOf(
+                "id" to requireNotNull(book.id),
+                "title" to book.title,
+                "author" to book.author,
+                "is_reserved" to book.is_reserved
+            )
+        )
+
+        if (updatedRows == 0) {
+            throw BookNotFoundException("Livre non trouvé pour l'id ${book.id}")
+        }
+    }
+
     override fun save(book: Book) {
         namedParameterJdbcTemplate.update(
             """
-        INSERT INTO book(title, author)
-        VALUES (:title, :author)
+        INSERT INTO book(title, author, is_reserved)
+        VALUES (:title, :author, :is_reserved)
         """.trimIndent(),
             mapOf(
                 "title" to book.title,
-                "author" to book.author
+                "author" to book.author,
+                "is_reserved" to book.is_reserved
             )
         )
     }

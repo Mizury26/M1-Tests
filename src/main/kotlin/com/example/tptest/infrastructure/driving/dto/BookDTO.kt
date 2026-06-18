@@ -8,4 +8,6 @@ data class BookDTO (
     val title: String,
     @field:NotBlank
     val author: String,
+    @field:NotBlank
+    val isReserved: Boolean
 )
