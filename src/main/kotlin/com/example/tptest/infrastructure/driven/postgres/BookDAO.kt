@@ -17,7 +17,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                     id = rs.getString("id"),
                     title = rs.getString("title"),
                     author = rs.getString("author"),
-                    is_reserved = rs.getBoolean("is_reserved")
+                    isReserved = rs.getBoolean("is_reserved")
                 )
             }
     }
@@ -31,7 +31,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                 id = rs.getString("id"),
                 title = rs.getString("title"),
                 author = rs.getString("author"),
-                is_reserved = rs.getBoolean("is_reserved")
+                isReserved = rs.getBoolean("is_reserved")
             )
         }.firstOrNull() ?: throw BookNotFoundException("Livre non trouvé pour l'id $id")
     }
@@ -44,12 +44,13 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                 author = :author,
                 is_reserved = :is_reserved
             WHERE id = :id::uuid
+            
             """.trimIndent(),
             mapOf(
                 "id" to requireNotNull(book.id),
                 "title" to book.title,
                 "author" to book.author,
-                "is_reserved" to book.is_reserved
+                "is_reserved" to book.isReserved
             )
         )
 
@@ -64,17 +65,19 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
         INSERT INTO book(title, author, is_reserved)
         VALUES (:title, :author, :is_reserved)
         RETURNING id, title, author, is_reserved
-        """.trimIndent(),
+        
+        """
+                .trimIndent(),
             MapSqlParameterSource()
                 .addValue("title", book.title)
                 .addValue("author", book.author)
-                .addValue("is_reserved", book.is_reserved)
+                .addValue("is_reserved", book.isReserved)
         ) { rs, _ ->
             Book(
                 id = rs.getString("id"),
                 title = rs.getString("title"),
                 author = rs.getString("author"),
-                is_reserved = rs.getBoolean("is_reserved")
+                isReserved = rs.getBoolean("is_reserved")
             )
         }.first()
     }

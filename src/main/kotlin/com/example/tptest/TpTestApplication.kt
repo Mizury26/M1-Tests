@@ -8,6 +8,5 @@ class TpTestApplication
 
 @Suppress("SpreadOperator")
 fun main(args: Array<String>) {
-	runApplication<TpTestApplication>(*args)
+    runApplication<TpTestApplication>(*args)
 }
-

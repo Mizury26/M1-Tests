@@ -4,7 +4,7 @@ data class Book(
     val id: String?,
     val title: String,
     val author: String,
-    val is_reserved: Boolean
+    val isReserved: Boolean
 ) {
     init {
         require(title.isNotBlank()) { "Le titre ne doit pas être vide" }

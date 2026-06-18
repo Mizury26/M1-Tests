@@ -26,10 +26,10 @@ class BookUseCase {
         if (initBook == null) {
             throw BookNotFoundException("Livre non trouvé pour l'id $bookId")
         }
-        if (initBook.is_reserved) {
+        if (initBook.isReserved) {
             throw BookAlreadyReservedException("Livre déjà réservé")
         }
-        val reservedBook = initBook.copy(is_reserved = true)
+        val reservedBook = initBook.copy(isReserved = true)
         bookPort.update(reservedBook)
     }
 
@@ -38,10 +38,10 @@ class BookUseCase {
         if (initBook == null) {
             throw BookNotFoundException("Livre non trouvé pour l'id $bookId")
         }
-        if (!initBook.is_reserved) {
+        if (!initBook.isReserved) {
             throw BookNotReservedException("Livre n'est pas réservé")
         }
-        val reservedBook = initBook.copy(is_reserved = false)
+        val reservedBook = initBook.copy(isReserved = false)
         bookPort.update(reservedBook)
     }
 }

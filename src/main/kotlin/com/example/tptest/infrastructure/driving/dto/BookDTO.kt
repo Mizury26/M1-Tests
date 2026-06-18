@@ -1,4 +1,4 @@
-﻿package com.example.tptest.infrastructure.driving.dto;
+﻿package com.example.tptest.infrastructure.driving.dto
 import jakarta.validation.constraints.NotBlank
 
 data class BookDTO (

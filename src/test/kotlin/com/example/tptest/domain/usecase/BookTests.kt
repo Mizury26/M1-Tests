@@ -19,13 +19,13 @@ import io.mockk.verify
 class BookUnitTests : FunSpec({
     test("A book should have a non-empty title") {
         shouldThrow<IllegalArgumentException> {
-            Book(id = null, title = "", author = "Victor Hugo", is_reserved = false)
+            Book(id = null, title = "", author = "Victor Hugo", isReserved = false)
         }
     }
 
     test("A book should have a non-empty author") {
         shouldThrow<IllegalArgumentException> {
-            Book(id = null, title = "Les Misérables", author = "", is_reserved = false)
+            Book(id = null, title = "Les Misérables", author = "", isReserved = false)
         }
     }
 })
@@ -35,8 +35,8 @@ class BookInvariantsTests : FunSpec({
         val repository = FakeBookRepository()
         val useCase = BookUseCase(repository)
 
-        val book1 = Book(id = null, title = "Le Petit Prince", author = "Antoine de Saint-Exupéry", is_reserved = false)
-        val book2 = Book(id = null, title = "Les Misérables", author = "Victor Hugo", is_reserved = true)
+        val book1 = Book(id = null, title = "Le Petit Prince", author = "Antoine de Saint-Exupéry", isReserved = false)
+        val book2 = Book(id = null, title = "Les Misérables", author = "Victor Hugo", isReserved = true)
 
         useCase.addBook(book1)
         useCase.addBook(book2)
@@ -52,9 +52,9 @@ class BookInvariantsTests : FunSpec({
         val useCase = BookUseCase(repository)
 
         val books = listOf(
-            Book(id = null, title = "Zola", author = "Émile Zola", is_reserved = true),
-            Book(id = null, title = "A l'ombre", author = "Auteur", is_reserved = false),
-            Book(id = null, title = "Moby Dick", author = "Herman Melville", is_reserved = false)
+            Book(id = null, title = "Zola", author = "Émile Zola", isReserved = true),
+            Book(id = null, title = "A l'ombre", author = "Auteur", isReserved = false),
+            Book(id = null, title = "Moby Dick", author = "Herman Melville", isReserved = false)
         )
 
         every { repository.findAll() } returns books
@@ -67,7 +67,7 @@ class BookInvariantsTests : FunSpec({
 
     test("Reserving an already reserved book should throw BookAlreadyReservedException") {
         val repository = FakeBookRepository()
-        val book = Book(id = "1", title = "Les Misérables", author = "Victor Hugo", is_reserved = true)
+        val book = Book(id = "1", title = "Les Misérables", author = "Victor Hugo", isReserved = true)
         repository.save(book)
 
         val useCase = BookUseCase(repository)
@@ -79,7 +79,7 @@ class BookInvariantsTests : FunSpec({
 
     test("Dereserving a not reserved book should throw BookNotReservedException") {
         val repository = FakeBookRepository()
-        val book = Book(id = "1", title = "Le Petit Prince", author = "Antoine de Saint-Exupéry", is_reserved = false)
+        val book = Book(id = "1", title = "Le Petit Prince", author = "Antoine de Saint-Exupéry", isReserved = false)
         repository.save(book)
 
         val useCase = BookUseCase(repository)

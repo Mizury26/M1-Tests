@@ -38,7 +38,6 @@ class BookController(
         } catch (e: Exception) {
             handleException(e, "Erreur lors de l'ajout du livre")
         }
-        throw IllegalStateException("Unreachable")
     }
 
     @PostMapping("/reserve")
@@ -62,13 +61,13 @@ class BookController(
     }
 
     fun mappingBookToBookDTO(book: Book): BookDTO =
-        BookDTO(requireNotNull(book.id), book.title, book.author, book.is_reserved)
+        BookDTO(requireNotNull(book.id), book.title, book.author, book.isReserved)
 
     fun mappingBookDTOCreateToBook(bookDTO: BookDTOCreate): Book =
         Book(
             id = null,
             title = bookDTO.title,
             author = bookDTO.author,
-            is_reserved = false
+            isReserved = false
         )
 }
