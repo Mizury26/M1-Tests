@@ -6,6 +6,7 @@ plugins {
 	id("io.kotest") version "6.1.11"
 	id("jacoco")
 	id("info.solidsoft.pitest") version "1.19.0-rc.2"
+	id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 group = "com.example"
@@ -161,6 +162,10 @@ tasks.jacocoTestReport {
 	}
 }
 
+tasks.named<io.gitlab.arturbosch.detekt.Detekt>("detekt") {
+	autoCorrect = true
+}
+
 pitest {
 	junit5PluginVersion.set("1.2.3")
 	pitestVersion.set("1.20.3")
@@ -173,5 +178,12 @@ pitest {
 	verbose.set(true)
 }
 
+configurations.named("detekt") {
+	resolutionStrategy.eachDependency {
+		if (requested.group == "org.jetbrains.kotlin") {
+			useVersion("2.0.21")
+		}
+	}
+}
 
 

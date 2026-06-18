@@ -1,0 +1,106 @@
+﻿build:
+  maxIssues: 0
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+processors:
+  active: true
+
+console-reports:
+  active: true
+
+output-reports:
+  active: true
+
+style:
+  MagicNumber:
+    active: false
+
+  WildcardImport:
+    active: true
+
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+    excludePackageStatements: true
+    excludeImportStatements: true
+
+  ReturnCount:
+    active: false
+
+  ThrowsCount:
+    active: false
+
+  NewLineAtEndOfFile:
+    active: true
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 60
+
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+    constructorThreshold: 8
+
+  TooManyFunctions:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-z][a-zA-Z0-9]*'
+
+  ClassNaming:
+    active: true
+    classPattern: '[A-Z][a-zA-Z0-9]*'
+
+  ConstructorParameterNaming:
+    active: true
+    parameterPattern: '[a-z][A-Za-z0-9]*'
+
+  VariableNaming:
+    active: true
+    variablePattern: '[a-z][A-Za-z0-9]*'
+
+formatting:
+  active: true
+  autoCorrect: true
+
+  MaximumLineLength:
+    active: true
+    maxLineLength: 140
+
+  NoWildcardImports:
+    active: true
+
+  FinalNewline:
+    active: true
+
+  NoSemicolons:
+    active: true
+
+  Indentation:
+    active: true
+    indentSize: 4
+
+  SpacingAroundColon:
+    active: true
+
+  SpacingAroundComma:
+    active: true
+
+  SpacingAroundCurly:
+    active: true
+
+  SpacingAroundKeyword:
+    active: true
+
+  SpacingAroundOperators:
+    active: true
+
+  NoConsecutiveBlankLines:
+    active: true

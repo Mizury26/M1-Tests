@@ -1,20 +1,20 @@
-﻿package com.example.tptest.infrastructure.driving.controller;
+﻿package com.example.tptest.infrastructure.driving.controller
 
-import com.example.tptest.infrastructure.driving.dto.BookDTO
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.http.HttpStatus
-import com.example.tptest.domain.usecase.BookUseCase
 import com.example.tptest.domain.model.Book
+import com.example.tptest.domain.usecase.BookUseCase
+import com.example.tptest.infrastructure.driving.dto.BookDTO
 import com.example.tptest.infrastructure.driving.dto.BookDTOCreate
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/books")
@@ -22,14 +22,10 @@ class BookController(
     private val bookUseCase: BookUseCase
 ) {
 
-    // GET localhost:8080/books returns [{"title":"titre1","author": "author1"},{"titel":"titre2","author": "author2"}]
     @GetMapping
-    fun getBook(): List<BookDTO> {
-        val books = bookUseCase.getAllBooks()
-        return books.map { book -> mappingBookToBookDTO(book) }
-    }
+    fun getBook(): List<BookDTO> =
+        bookUseCase.getAllBooks().map { book -> mappingBookToBookDTO(book) }
 
-    // POST localhost:8080/books with body {"title":"title_test","author":"author_test"} returns 201 Created with no content
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addBook(@Valid @RequestBody book: BookDTOCreate) {
@@ -37,24 +33,20 @@ class BookController(
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleInvalidJson(e: HttpMessageNotReadableException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Corps de la requête invalide")
-    }
+    fun handleInvalidJson(): ResponseEntity<String> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Corps de la requête invalide")
 
     @ExceptionHandler(RuntimeException::class)
-    fun handleRuntimeException(e: RuntimeException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
-    }
+    fun handleRuntimeException(e: RuntimeException): ResponseEntity<String> =
+        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.message)
 }
 
-fun mappingBookToBookDTO(book: Book): BookDTO {
-    return BookDTO(requireNotNull(book.id), book.title, book.author )
-}
+fun mappingBookToBookDTO(book: Book): BookDTO =
+    BookDTO(requireNotNull(book.id), book.title, book.author)
 
-fun mappingBookDTOToBook(bookDTO: BookDTOCreate): Book {
-    return Book(
+fun mappingBookDTOToBook(bookDTO: BookDTOCreate): Book =
+    Book(
         id = null,
         title = bookDTO.title,
         author = bookDTO.author
     )
-}

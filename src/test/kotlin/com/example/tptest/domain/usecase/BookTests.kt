@@ -1,14 +1,12 @@
 ﻿package com.example.tptest.domain.usecase
 
 import com.example.tptest.domain.model.Book
-import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.assertions.throwables.shouldThrow
-import com.example.tptest.domain.fake.FakeBookRepository
 import com.example.tptest.domain.port.IBookPort
-import com.example.tptest.domain.usecase.BookUseCase
+import com.example.tptest.fake.FakeBookRepository
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldContainAll
 import io.mockk.every

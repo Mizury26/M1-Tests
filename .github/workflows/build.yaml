@@ -21,6 +21,9 @@ jobs:
       - name: Give execute permission to gradlew
         run: chmod +x gradlew
 
+      - name: Detekt static analysis
+        run : ./gradlew detekt
+
       # ✅ 1. Build
       - name: Build project
         run: ./gradlew clean build
