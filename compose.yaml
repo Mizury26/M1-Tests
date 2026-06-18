@@ -12,19 +12,6 @@ services:
     networks:
       - test-default
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin
-    depends_on:
-      - postgres
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@test.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8080:80"
-    networks:
-      - test-default
-
 networks:
 
   test-default:
